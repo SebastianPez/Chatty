@@ -18,7 +18,7 @@ class ChatBar extends Component {
         super(props);
         this.state = {
             username: this.props.user.name,
-            content: '',
+            content: ''
         }
         this.messageInput = React.createRef();
         this.onContent = this.onContent.bind(this);
@@ -31,23 +31,24 @@ class ChatBar extends Component {
         });
     }
     onNewUsername(event) {
-        if (event.keyCode === 13) {
-            this.setState({
-                username: event.target.value
-            });
+        this.setState({
+            username: event.target.value
+        });
+            if (event.keyCode === 13) {
             this.messageInput.current.focus();
         }
     }
     onMessage(event) {
         if (event.keyCode === 13) {
             // const length = this.state.content.length;
+            this.state.count = this.state.count + 1;
             const state = {
                 error: ''
             };
             // if (length === 0) {
                 // state.error = `You cannot post an empty message.`;
             // } else {
-                this.props.onNewMessage({content: this.state.content, username: this.state.username});
+                this.props.onNewMessage({ content: this.state.content, username: this.state.username});
                 state.content = '';
             // }
             this.setState(state);
@@ -57,8 +58,23 @@ class ChatBar extends Component {
         
         return (
                 <footer className="chatbar">
-                    <input className="chatbar-username" type="text" defaultValue={this.state.username} onKeyDown={this.onNewUsername} placeholder="Your Name (Optional)" />
-                    <input ref={this.messageInput} value={this.state.content} onChange={this.onContent} onKeyDown={this.onMessage} className="chatbar-message" type="text" placeholder="Type a message and hit ENTER" />
+                    <input 
+                        className="chatbar-username"
+                        type="text" 
+                        defaultValue={this.state.username}
+                        onChange={this.onNewUsername}
+                        onKeyDown={this.onNewUsername} 
+                        placeholder="Your Name (Optional)" 
+                     />
+                    <input 
+                        ref={this.messageInput} 
+                        value={this.state.content} 
+                        onChange={this.onContent} 
+                        onKeyDown={this.onMessage} 
+                        className="chatbar-message" 
+                        type="text" 
+                        placeholder="Type a message and hit ENTER" 
+                    />
                 </footer>
         )
     }
