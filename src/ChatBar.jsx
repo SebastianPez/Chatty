@@ -20,18 +20,23 @@ class ChatBar extends Component {
             username: this.props.user.name,
             content: '',
         }
+        this.messageInput = React.createRef();
         this.onContent = this.onContent.bind(this);
         this.onMessage = this.onMessage.bind(this);
+        this.onNewUsername = this.onNewUsername.bind(this);
     }
     onContent(event) {
         this.setState({
             content: event.target.value
         });
     }
-    onNameChange(event) {
-        this.setState({
-            username: event.target.value
-        });
+    onNewUsername(event) {
+        if (event.keyCode === 13) {
+            this.setState({
+                username: event.target.value
+            });
+            this.messageInput.current.focus();
+        }
     }
     onMessage(event) {
         if (event.keyCode === 13) {
@@ -52,8 +57,8 @@ class ChatBar extends Component {
         
         return (
                 <footer className="chatbar">
-                    <input className="chatbar-username" type="text" defaultValue={this.state.username} onChange={this.onNameChange} placeholder="Your Name (Optional)" />
-                    <input value={this.state.content} onChange={this.onContent} onKeyDown={this.onMessage} className="chatbar-message" type="text" placeholder="Type a message and hit ENTER" />
+                    <input className="chatbar-username" type="text" defaultValue={this.state.username} onKeyDown={this.onNewUsername} placeholder="Your Name (Optional)" />
+                    <input ref={this.messageInput} value={this.state.content} onChange={this.onContent} onKeyDown={this.onMessage} className="chatbar-message" type="text" placeholder="Type a message and hit ENTER" />
                 </footer>
         )
     }
