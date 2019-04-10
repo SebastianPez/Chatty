@@ -48,7 +48,9 @@ class ChatBar extends Component {
             // if (length === 0) {
                 // state.error = `You cannot post an empty message.`;
             // } else {
-                this.props.onNewMessage({ content: this.state.content, username: this.state.username});
+                this.props.onNewMessage({ 
+                    content: this.state.content, 
+                    username: this.state.username});
                 state.content = '';
             // }
             this.setState(state);
