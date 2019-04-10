@@ -31,28 +31,25 @@ class ChatBar extends Component {
         });
     }
     onNewUsername(event) {
-        this.setState({
-            username: event.target.value
-        });
-            if (event.keyCode === 13) {
-            this.messageInput.current.focus();
+        this.setState({ username: event.target.value})
+        if (event.keyCode === 13) {
+        this.props.onNewUser(this.state.username)
+        this.messageInput.current.focus();
         }
     }
     onMessage(event) {
+        if (!this.state.username.length) {
+            this.setState({ username: "Anonymous"});
+        }
         if (event.keyCode === 13) {
-            // const length = this.state.content.length;
-            this.state.count = this.state.count + 1;
+            // this.state.count = this.state.count + 1;
             const state = {
                 error: ''
             };
-            // if (length === 0) {
-                // state.error = `You cannot post an empty message.`;
-            // } else {
-                this.props.onNewMessage({ 
-                    content: this.state.content, 
-                    username: this.state.username});
-                state.content = '';
-            // }
+            this.props.onNewMessage({ 
+            content: this.state.content, 
+            username: this.state.username});
+            state.content = '';
             this.setState(state);
         }
     }
@@ -63,9 +60,9 @@ class ChatBar extends Component {
                     <input 
                         className="chatbar-username"
                         type="text" 
-                        defaultValue={this.state.username}
-                        onChange={this.onNewUsername}
-                        onKeyDown={this.onNewUsername} 
+                        defaultValue={this.state.username ? this.state.username : "Anonymous"}
+                        onKeyDown={this.onNewUsername}
+                        onChange={this.onNewUsername} 
                         placeholder="Your Name (Optional)" 
                      />
                     <input 

@@ -14,25 +14,16 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: "Bob"},
-      messages: [
-        {
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-          id: 1
-        },
-        {
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good.",
-          id: 2
-        }
-      ]
+      currentUser: {name: ""},
+      messages: []
     }
     this.onNewMessage = this.onNewMessage.bind(this);
+    this.onNewUser = this.onNewUser.bind(this);
   }
   componentDidMount() {
      this.socket = new WebSocket("ws://localhost:3001");
      console.log('Connected to server');
+     // Need to change so that current user receives immediate update to their state, shouldn't have to wait for response from server to do so.
      this.socket.onmessage = (msg) => {
        const newMessages = this.state.messages.concat(JSON.parse(msg.data));
        this.setState({ messages: newMessages});
@@ -40,17 +31,19 @@ class App extends Component {
   }
   
   onNewMessage(contents) {
-     const message = {id: this.state.messages.length + 1, content: contents.content, username: contents.username};
+     const message = { content: contents.content, username: contents.username};
      this.socket.send(JSON.stringify(message));
-    // const newMessages = this.state.messages.concat(message);
-    // this.setState({ messages: newMessages});
+  }
+  onNewUser(content) {
+    this.setState({currentUser: {name: content}});
+    console.log("App State", this.state.currentUser);
   }
   render() {
     return (
       <div>
       <NavBar />
       <MessageList messages={this.state.messages} />
-      <ChatBar user={this.state.currentUser} onNewMessage={this.onNewMessage} />
+      <ChatBar user={this.state.currentUser} onNewMessage={this.onNewMessage} onNewUser={this.onNewUser} />
       </div>
     );
   }
