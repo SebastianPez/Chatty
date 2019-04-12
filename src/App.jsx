@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+// Importing all the components necessary for the App.
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 import NavBar from './NavBar.jsx';
@@ -14,15 +15,17 @@ class App extends Component {
     this.onNewMessage = this.onNewMessage.bind(this);
     this.onNewUser = this.onNewUser.bind(this);
   }
+  // 
   componentDidMount() {
      this.socket = new WebSocket("ws://localhost:3001");
-     console.log('Connected to server');
-     // Need to change so that current user receives immediate update to their state, shouldn't have to wait for response from server to do so.
+     this.socket.onopen = () => {
+       console.log('Connected to server');
+     }
      this.socket.onmessage = (msg) => {
        const incomingMessage = JSON.parse(msg.data);
        const newMessages = this.state.messages.concat(incomingMessage);
        if (incomingMessage.currentUsers) {
-         this.setState({ users: incomingMessage.currentUsers })
+         this.setState({ users: incomingMessage.currentUsers, messages: newMessages })
        } else {
        this.setState({ messages: newMessages });
        }

@@ -47,7 +47,7 @@ class ChatBar extends Component {
                 username: this.state.username});
                 state.content = '';
                 this.setState(state);
-                }
+            }
         }
     }
     render() {
