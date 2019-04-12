@@ -20,6 +20,7 @@ let userCount = 0;
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  // When a user connects, the userCount for all connected users gets incremented which is then sent out as a notification.
   userCount ++;
   let newUser = { type: "postNotification", content: "New", currentUsers: userCount };
   wss.clients.forEach(function each(client) {
@@ -31,7 +32,7 @@ wss.on('connection', (ws) => {
     }
     }
   });
-
+  // When the server receives a new message, it filters them based on type. It then assigns a unique id to the message which is then broadcasted to all users, including the user who sent it.
   ws.on('message', (msg) => {
     const incomingMsg = JSON.parse(msg);
     let outgoingMsg = {};
@@ -52,6 +53,7 @@ wss.on('connection', (ws) => {
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
+  // When a user disconnects, the userCount for all connected users gets decremented which is then sent out as a notification.
     userCount --;
     let loseUser = { type: "postNotification", content: "Lose", currentUsers: userCount };
     console.log('Client disconnected');
