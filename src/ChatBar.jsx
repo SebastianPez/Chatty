@@ -1,24 +1,12 @@
 import React, {Component} from 'react';
 
-const handleSendMessage = (event) => {
-    // event.preventDefault();
-    // const form = event.target;
-    // const usernameInput = form.username;
-    // const messageInput = form.message;
-    // const newMessage = {
-    //     username: usernameInput.value,
-    //     message: messageInput.value
-    // }
-    // this.props.addNewMessage(newMessage);
-
-    // usernameInput.value = messageInput.value = '';
-}
 class ChatBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
             username: this.props.user.name,
-            content: ''
+            content: '',
+            oldUserName: ''
         }
         this.messageInput = React.createRef();
         this.onContent = this.onContent.bind(this);
@@ -31,10 +19,14 @@ class ChatBar extends Component {
         });
     }
     onNewUsername(event) {
-        this.setState({ username: event.target.value})
         if (event.keyCode === 13) {
-        this.props.onNewUser(this.state.username)
-        this.messageInput.current.focus();
+            this.setState((prevState) => {
+                return { oldUserName: prevState.username}
+            });
+            this.setState({ username: event.target.value}, () => {
+                this.props.onNewUser({ username: this.state.username, oldUserName: this.state.oldUserName });
+            });
+            this.messageInput.current.focus();
         }
     }
     onMessage(event) {
@@ -42,15 +34,20 @@ class ChatBar extends Component {
             this.setState({ username: "Anonymous"});
         }
         if (event.keyCode === 13) {
-            // this.state.count = this.state.count + 1;
-            const state = {
-                error: ''
-            };
-            this.props.onNewMessage({ 
-            content: this.state.content, 
-            username: this.state.username});
-            state.content = '';
-            this.setState(state);
+            if (!this.state.content) {
+                alert('Cannot send an empty message');
+                return;
+            } else {
+                const state = {
+                    error: ''
+                };
+                this.props.onNewMessage({ 
+                type: "postMessage",
+                content: this.state.content, 
+                username: this.state.username});
+                state.content = '';
+                this.setState(state);
+                }
         }
     }
     render() {
@@ -62,7 +59,6 @@ class ChatBar extends Component {
                         type="text" 
                         defaultValue={this.state.username ? this.state.username : "Anonymous"}
                         onKeyDown={this.onNewUsername}
-                        onChange={this.onNewUsername} 
                         placeholder="Your Name (Optional)" 
                      />
                     <input 

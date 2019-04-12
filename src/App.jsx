@@ -1,21 +1,15 @@
 import React, {Component} from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
-
-function NavBar() {
-  return (
-    <nav className="navbar">
-      <a href="/" className="navbar-brand">Chatty</a>
-    </nav>
-  );
-}
+import NavBar from './NavBar.jsx';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentUser: {name: ""},
-      messages: []
+      messages: [],
+      users: 0
     }
     this.onNewMessage = this.onNewMessage.bind(this);
     this.onNewUser = this.onNewUser.bind(this);
@@ -25,23 +19,31 @@ class App extends Component {
      console.log('Connected to server');
      // Need to change so that current user receives immediate update to their state, shouldn't have to wait for response from server to do so.
      this.socket.onmessage = (msg) => {
-       const newMessages = this.state.messages.concat(JSON.parse(msg.data));
-       this.setState({ messages: newMessages});
+       const incomingMessage = JSON.parse(msg.data);
+       const newMessages = this.state.messages.concat(incomingMessage);
+       if (incomingMessage.currentUsers) {
+         this.setState({ users: incomingMessage.currentUsers })
+       } else {
+       this.setState({ messages: newMessages });
+       }
      }
   }
   
   onNewMessage(contents) {
-     const message = { content: contents.content, username: contents.username};
+     const message = { type: contents.type, content: contents.content, username: contents.username};
      this.socket.send(JSON.stringify(message));
   }
-  onNewUser(content) {
-    this.setState({currentUser: {name: content}});
-    console.log("App State", this.state.currentUser);
+  onNewUser(contents) {
+    // console.log(contents);
+    let oldUserName = contents.oldUserName;
+    this.setState({currentUser: {name: contents.username}});
+    let newUserNameUpdate = { type: "postNotification", username: contents.username, oldUserName: oldUserName};
+    this.socket.send(JSON.stringify(newUserNameUpdate));
   }
   render() {
     return (
       <div>
-      <NavBar />
+      <NavBar currentUsers={this.state.users} />
       <MessageList messages={this.state.messages} />
       <ChatBar user={this.state.currentUser} onNewMessage={this.onNewMessage} onNewUser={this.onNewUser} />
       </div>
