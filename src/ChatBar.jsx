@@ -13,11 +13,13 @@ class ChatBar extends Component {
         this.onMessage = this.onMessage.bind(this);
         this.onNewUsername = this.onNewUsername.bind(this);
     }
+    // Updating content state when a user type's or delete's content from the message bar.
     onContent(event) {
         this.setState({
             content: event.target.value
         });
     }
+    // When a user changes their username, it calls the function passed down from App to update the currentUser state, which in turn gets received anew as a prop in the Chatbar.
     onNewUsername(event) {
         if (event.keyCode === 13) {
             this.setState((prevState) => {
@@ -26,14 +28,18 @@ class ChatBar extends Component {
             this.setState({ username: event.target.value}, () => {
                 this.props.onNewUser({ username: this.state.username, oldUserName: this.state.oldUserName });
             });
+            // Once a user assigns their new username, it autofocuses onto the message bar.
             this.messageInput.current.focus();
         }
     }
+    // When a user completes and sends a message, it calls the function passed down from App to send that message to the server.
     onMessage(event) {
+        // If the user hasn't chosen a username, they are by default Anonymous.
         if (!this.state.username.length) {
             this.setState({ username: "Anonymous"});
         }
         if (event.keyCode === 13) {
+            // If the user attempts to send an empty message they get an error alert.
             if (!this.state.content) {
                 alert('Cannot send an empty message');
                 return;
