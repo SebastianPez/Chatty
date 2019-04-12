@@ -15,34 +15,39 @@ class App extends Component {
     this.onNewMessage = this.onNewMessage.bind(this);
     this.onNewUser = this.onNewUser.bind(this);
   }
-  // 
+  // Iniating client connection to the Chat Server.
   componentDidMount() {
      this.socket = new WebSocket("ws://localhost:3001");
      this.socket.onopen = () => {
        console.log('Connected to server');
      }
+     // Client side handling for messages from the server.
      this.socket.onmessage = (msg) => {
        const incomingMessage = JSON.parse(msg.data);
        const newMessages = this.state.messages.concat(incomingMessage);
+       // Handling for the user count update inside the Chatty App.
        if (incomingMessage.currentUsers) {
          this.setState({ users: incomingMessage.currentUsers, messages: newMessages })
+         // Handling for all regular chat messages from the users, adding them to the App's state to pass down as props for each individual user.
        } else {
        this.setState({ messages: newMessages });
        }
      }
   }
   
+  // The function passed down to the chatbar to allow the messages to be sent to the server.
   onNewMessage(contents) {
      const message = { type: contents.type, content: contents.content, username: contents.username};
      this.socket.send(JSON.stringify(message));
   }
+  // The function passed down to the chatbar to update the currentUser when a user changes their username. Then sends that as a notification to the server which tells all users about the name change.
   onNewUser(contents) {
-    // console.log(contents);
     let oldUserName = contents.oldUserName;
     this.setState({currentUser: {name: contents.username}});
     let newUserNameUpdate = { type: "postNotification", username: contents.username, oldUserName: oldUserName};
     this.socket.send(JSON.stringify(newUserNameUpdate));
   }
+  // Rendering of the page with proper props for each component.
   render() {
     return (
       <div>
