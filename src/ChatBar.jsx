@@ -36,7 +36,7 @@ class ChatBar extends Component {
     onMessage(event) {
         // If the user hasn't chosen a username, they are by default Anonymous.
         if (!this.state.username.length) {
-            this.setState({ username: "Anonymous"});
+            this.setState({ username: 'Anonymous'});
         }
         if (event.keyCode === 13) {
             // If the user attempts to send an empty message they get an error alert.
@@ -48,7 +48,7 @@ class ChatBar extends Component {
                     error: ''
                 };
                 this.props.onNewMessage({ 
-                type: "postMessage",
+                type: 'postMessage',
                 content: this.state.content, 
                 username: this.state.username});
                 state.content = '';
@@ -59,22 +59,22 @@ class ChatBar extends Component {
     render() {
         
         return (
-                <footer className="chatbar">
+                <footer className='chatbar'>
                     <input 
-                        className="chatbar-username"
-                        type="text" 
-                        defaultValue={this.state.username ? this.state.username : "Anonymous"}
+                        className='chatbar-username'
+                        type='text'
+                        defaultValue={this.state.username ? this.state.username : 'Anonymous'}
                         onKeyDown={this.onNewUsername}
-                        placeholder="Your Name (Optional)" 
+                        placeholder='Your Name (Optional)' 
                      />
                     <input 
                         ref={this.messageInput} 
                         value={this.state.content} 
                         onChange={this.onContent} 
                         onKeyDown={this.onMessage} 
-                        className="chatbar-message" 
-                        type="text" 
-                        placeholder="Type a message and hit ENTER" 
+                        className='chatbar-message'
+                        type='text'
+                        placeholder='Type a message and hit ENTER' 
                     />
                 </footer>
         )

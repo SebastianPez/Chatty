@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: ""},
+      currentUser: {name: ''},
       messages: [],
       users: 0
     }
@@ -17,7 +17,7 @@ class App extends Component {
   }
   // Iniating client connection to the Chat Server.
   componentDidMount() {
-     this.socket = new WebSocket("ws://localhost:3001");
+     this.socket = new WebSocket('ws://localhost:3001');
      this.socket.onopen = () => {
        console.log('Connected to server');
      }
@@ -44,7 +44,7 @@ class App extends Component {
   onNewUser(contents) {
     let oldUserName = contents.oldUserName;
     this.setState({currentUser: {name: contents.username}});
-    let newUserNameUpdate = { type: "postNotification", username: contents.username, oldUserName: oldUserName};
+    let newUserNameUpdate = { type: 'postNotification', username: contents.username, oldUserName: oldUserName};
     this.socket.send(JSON.stringify(newUserNameUpdate));
   }
   // Rendering of the page with proper props for each component.
