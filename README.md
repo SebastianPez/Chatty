@@ -31,9 +31,13 @@ npm start
 
 ### Screenshots
 
+##### Users get a notifcation when another user joins the channel.
 !["Notification when another user joins the channel"](https://github.com/SebastianPez/Chatty/blob/master/Screenshots/Screen%20Shot%202019-04-12%20at%204.45.35%20PM.png?raw=true)
+#### All users get a notification when a user changes their username.
 !["Notifcation when a user changes their username"](https://github.com/SebastianPez/Chatty/blob/master/Screenshots/Screen%20Shot%202019-04-12%20at%204.46.02%20PM.png?raw=true)
+#### All users see other user's messages.
 !["Showing another connected user's message"](https://github.com/SebastianPez/Chatty/blob/master/Screenshots/Screen%20Shot%202019-04-12%20at%204.46.46%20PM.png?raw=true)
+#### All users get a notifcation when a user leaves the channel.
 !["Notificatoin when a user leaves the channel"](https://github.com/SebastianPez/Chatty/blob/master/Screenshots/Screen%20Shot%202019-04-12%20at%204.47.08%20PM.png?raw=true)
 
 ### Dependencies
